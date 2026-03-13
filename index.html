@@ -16,7 +16,7 @@
     padding: 2px 20px; z-index: 10; pointer-events: none;
   }
   #logo-img { width: 25vw; height: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); transition: all 0.3s ease; }
-  @media (orientation: portrait) { #logo-img { width: 40vw; } }
+  @media (orientation: portrait) { #logo-img { width: 35vw; } }
   
   /* Logo réduit en game over */
   #ui.game-over-mode {
@@ -25,10 +25,10 @@
     padding: 5px 20px;
   }
   #ui.game-over-mode #logo-img {
-    width: 15vw;
+    width: 25vw;
   }
   @media (orientation: portrait) { 
-    #ui.game-over-mode #logo-img { width: 25vw; }
+    #ui.game-over-mode #logo-img { width: 45vw; }
   }
 
   #scores {
@@ -39,7 +39,7 @@
   .score-label { color: #1b4332; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
   .score-value { color: #1b4332; font-size: 1.2rem; font-weight: normal; }
   @media (max-width: 768px) {
-    #scores { top: 80px; right: 16px; gap: 14px; }
+    #scores { top: 140px; right: 16px; gap: 14px; }
     .score-label { font-size: 0.78rem; letter-spacing: 2.2px; }
     .score-value { font-size: 1.65rem; }
   }
