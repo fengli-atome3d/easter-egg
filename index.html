@@ -603,6 +603,37 @@
 </div>
 
 <script>
+let badWordsRegex = null;
+
+async function initWordFilter() {
+    try {
+        const response = await fetch('filter.json');
+        if (!response.ok) throw new Error('Filter file not found');
+        const words = await response.json();
+        
+        const patterns = words.map(word => {
+            return word.toLowerCase()
+                .split('')
+                .map(char => {
+                    // Substitutions + allow 1 or more repetitions (+)
+                    const map = {
+                        'a': '[a@4]', 'e': '[e3€]', 'i': '[i1l!|]',
+                        'o': '[o0]', 's': '[s5$z]', 'z': '[z2s]',
+                        't': '[t7]', 'n': '[nN]'
+                    };
+                    // The '+' ensures that 'z' matches 'z', 'zz', 'zzz', etc.
+                    return (map[char] || `[${char}]`) + '+';
+                })
+                .join('[\\W_]*'); // Allow symbols like - . _ between letters
+        });
+        
+        badWordsRegex = new RegExp(`(${patterns.join('|')})`, 'i');
+        console.log("Profanity filter initialized.");
+    } catch (e) { 
+        console.error("Filter load error:", e); 
+    }
+}
+initWordFilter();
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
@@ -1200,10 +1231,20 @@ async function handleLeaderboardSubmit() {
     lbMeta.textContent = 'Entre ton nom avant de valider.';
     return;
   }
-  saveToStorage('playerName', name);
+ 
 
 
   const currentScore = Number(score || 0) || 0;
+  if (badWordsRegex && badWordsRegex.test(name)) {
+        lbName.focus();
+        lbMeta.textContent = 'Ce nom contient un mot non autorisé. Merci de le changer.';
+        lbName.style.border = "2px solid #ff4d4d"; 
+        return;
+    } else {
+        lbName.style.border = "1px solid rgba(18, 58, 102, 0.35)"; 
+    }
+
+   saveToStorage('playerName', name);
   lbMeta.textContent = 'Validation en cours...';
 
   try {
